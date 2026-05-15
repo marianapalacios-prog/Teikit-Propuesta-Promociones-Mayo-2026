@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Request Comercial — Teikit · Lucky · El Huequito</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e6edf3;font-family:'DM Sans',system-ui,sans-serif;padding:32px 28px 60px;min-height:100vh}
+h1{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
+.subtitle{font-size:13px;color:#7d8590;margin-bottom:28px}
+
+/* BRAND TABS */
+.tabs{display:flex;gap:6px;margin-bottom:0;border-bottom:1px solid #21262d}
+.tab{padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;border-radius:8px 8px 0 0;border:1px solid transparent;border-bottom:none;color:#7d8590;background:transparent;transition:all .15s;position:relative;bottom:-1px}
+.tab:hover{color:#e6edf3;background:#161b22}
+.tab.on{color:#e6edf3;background:#0d1117;border-color:#21262d}
+.tab .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.panel{display:none;padding-top:24px}
+.panel.on{display:block}
+
+/* BRAND HEADER */
+.bh{border-radius:12px;padding:20px 24px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.bh-name{font-size:21px;font-weight:600;color:#fff;letter-spacing:-.02em}
+.bh-sub{font-size:12px;opacity:.65;margin-top:3px;color:#fff}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.18);color:#fff}
+
+/* SECTION */
+.sec-label{font-size:10px;font-weight:600;color:#7d8590;text-transform:uppercase;letter-spacing:.08em;margin-bottom:13px;margin-top:28px}
+
+/* 3-SEGMENT GRID */
+.seg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:4px}
+.seg-card{background:#161b22;border:1px solid #21262d;border-radius:12px;overflow:hidden}
+.seg-head{padding:12px 14px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #21262d}
+.seg-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.seg-title{font-size:13px;font-weight:600;color:#e6edf3}
+.seg-desc{font-size:11px;color:#7d8590;margin-top:1px}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{padding:6px 10px;text-align:left;font-weight:500;color:#7d8590;font-size:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #21262d;background:#161b22}
+td{padding:7px 10px;border-bottom:1px solid #161b22;color:#c9d1d9;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#1c2128}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;font-family:'DM Mono',monospace}
+.b-2x1{background:#eeedfe;color:#3c3489}
+.b-hi{background:#e1f5ee;color:#085041}
+.b-md{background:#eaf3de;color:#27500a}
+.b-lo{background:#f1efe8;color:#5f5e5a}
+
+/* EVENTS */
+.ev-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ev-card{border-radius:10px;border:1px solid #21262d;overflow:hidden}
+.ev-head{padding:10px 13px 8px;font-size:12px;font-weight:600}
+.ev-body{padding:9px 13px 11px;background:#161b22}
+.ev-date{font-size:10px;color:#7d8590;margin-bottom:4px}
+.ev-rule{font-size:11px;color:#c9d1d9;margin-bottom:3px;line-height:1.5}
+.ev-tag{font-size:10px;font-weight:600;display:inline-block;padding:3px 9px;border-radius:10px;margin-top:5px}
+
+/* FORECAST */
+.fc-card{background:#161b22;border:1px solid #21262d;border-radius:12px;padding:18px 20px}
+.fc-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.fc-emoji{font-size:24px}
+.fc-title{font-size:14px;font-weight:600;color:#e6edf3}
+.fc-sub{font-size:11px;color:#7d8590;margin-top:2px}
+.fc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.fc-s{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:11px 14px}
+.fc-v{font-size:19px;font-weight:600;color:#e6edf3;font-family:'DM Mono',monospace}
+.fc-l{font-size:10px;color:#7d8590;margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+.combos{display:flex;gap:8px;flex-wrap:wrap}
+.combo{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:10px 13px;flex:1;min-width:160px}
+.combo-name{font-size:12px;font-weight:600;color:#e6edf3;margin-bottom:3px}
+.combo-det{font-size:11px;color:#7d8590;line-height:1.5}
+
+/* CLOSING */
+.ask-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ask-item{background:#161b22;border:1px solid #21262d;border-radius:9px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.ask-num{font-size:20px;font-weight:600;flex-shrink:0;line-height:1.2;font-family:'DM Mono',monospace}
+.ask-txt{font-size:12px;color:#e6edf3;line-height:1.5;font-weight:500}
+.ask-sub{font-size:11px;color:#7d8590;margin-top:3px;line-height:1.4}
+
+/* BRAND COLORS */
+.teikit-bg{background:linear-gradient(135deg,#c0392b,#96281b)}
+.lucky-bg{background:linear-gradient(135deg,#b8860b,#8b6508)}
+.huequito-bg{background:linear-gradient(135deg,#2e6e14,#1a4a08)}
+</style>
+</head>
+<body>
+
+<h1>Request Comercial · Mayo–Julio 2026</h1>
+<p class="subtitle">Propuesta por segmento de usuario · Calendario de eventos · Forecast Copa del Mundo</p>
+
+<div class="tabs">
+  <div class="tab on" onclick="sw('t')"><span class="dot" style="background:#e05252"></span>🍣 Teikit</div>
+  <div class="tab" onclick="sw('l')"><span class="dot" style="background:#d4a017"></span>🍀 Lucky</div>
+  <div class="tab" onclick="sw('h')"><span class="dot" style="background:#4a7c2a"></span>🥩 El Huequito</div>
+</div>
+
+<!-- ====== TEIKIT ====== -->
+<div class="panel on" id="pt">
+  <div class="bh teikit-bg">
+    <div><div class="bh-name">🍣 Sushi Shop Teikit</div><div class="bh-sub">53 sucursales · 9 ciudades · Brand ID 1068</div></div>
+    <div class="pills"><span class="pill">Venta YTD $23M</span><span class="pill">AOV $391</span><span class="pill">Defect Rate 4.44%</span><span class="pill">-5.9% órdenes vs LY</span></div>
+  </div>
+
+  <div class="sec-label">Propuesta de inversión por segmento de usuario</div>
+  <div class="seg-grid">
+    <div class="seg-card">
+      <div class="seg-head"><div class="seg-ico" style="background:#0d2a3e">🌱</div><div><div class="seg-title">Nuevos usuarios</div><div class="seg-desc">~1,150 / mes · 43% del mix</div></div></div>
+      <table><thead><tr><th>#</th><th>Producto</th><th>Desc.</th><th>Días</th><th>Rappi</th><th>Rest.</th></tr></thead><tbody>
+        <tr><td>1</td><td>MOV de entrada</td><td><span class="badge b-lo">$40 off min $499</span></td><td>Mar–Vie·Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>2</td><td>Dragon Maki</td><td><span class="badge b-2x1">2×1</span></td><td>Vie–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>3</td><td>Yakimeshi set</td><td><span class="badge b-md">30%</span></td><td>Lun–Jue</td><td>15%</td><td>15%</td></tr>
+      </tbody></table>
+    </div>
+    <div class="seg-card">
+      <div class="seg-head"><div class="seg-ico" style="background:#0a2a1e">🔁</div><div><div class="seg-title">Retenidos</div><div class="seg-desc">~544 / mes · 21% del mix</div></div></div>
+      <table><thead><tr><th>#</th><th>Producto</th><th>Desc.</th><th>Días</th><th>Rappi</th><th>Rest.</th></tr></thead><tbody>
+        <tr><td>1</td><td>Rollos Clásicos</td><td><span class="badge b-hi">50%</span></td><td>Lun–Jue</td><td>35%</td><td>15%</td></tr>
+        <tr><td>2</td><td>Aguacate Maki</td><td><span class="badge b-2x1">2×1</span></td><td>Vie–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>3</td><td>Combo Yakimeshi</td><td><span class="badge b-md">25%</span></td><td>Mié–Jue</td><td>10%</td><td>15%</td></tr>
+      </tbody></table>
+    </div>
+    <div class="seg-card">
+      <div class="seg-head"><div class="seg-ico" style="background:#2a1208">🔥</div><div><div class="seg-title">Reactivados / Perdidos</div><div class="seg-desc">~957 / mes · 36% del mix</div></div></div>
+      <table><thead><tr><th>#</th><th>Producto</th><th>Desc.</th><th>Días</th><th>Rappi</th><th>Rest.</th></tr></thead><tbody>
+        <tr><td>1</td><td>Filadelfia Maki</td><td><span class="badge b-hi">40%</span></td><td>Lun–Dom</td><td>25%</td><td>15%</td></tr>
+        <tr><td>2</td><td>Red Dragon Maki</td><td><span class="badge b-2x1">2×1</span></td><td>Vie–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>3</td><td>Kushiage Queso</td><td><span class="badge b-md">30%</span></td><td>Mar–Vie</td><td>15%</td><td>15%</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="sec-label">Calendario de eventos mayo–julio 2026</div>
+  <div class="ev-grid">
+    <div class="ev-card"><div class="ev-head" style="background:#1a1040;color:#afa9ec">⚡ Pro Days</div><div class="ev-body"><div class="ev-date">19–21 mayo · 3 días</div><div class="ev-rule">Mín. <strong>25% off</strong> · foco usuarios Pro</div><div class="ev-rule">Ratio <strong>2:1</strong> Rappi : Teikit</div><span class="ev-tag" style="background:#1a1040;color:#afa9ec">Rollos Clásicos + Dragon 2×1</span></div></div>
+    <div class="ev-card"><div class="ev-head" style="background:#0a2a1e;color:#5dcaa5">🛍️ Hot Sale</div><div class="ev-body"><div class="ev-date">27 mayo – 2 junio · 7 días</div><div class="ev-rule">Mín. <strong>40% off</strong> · todos los usuarios</div><div class="ev-rule">Ratio <strong>2:1</strong> Rappi : Teikit</div><span class="ev-tag" style="background:#0a2a1e;color:#5dcaa5">Yakimeshi + Rollos en combos</span></div></div>
+    <div class="ev-card"><div class="ev-head" style="background:#2a1a04;color:#ef9f27">⚽ Copa del Mundo</div><div class="ev-body"><div class="ev-date">Junio–Julio · temporada completa</div><div class="ev-rule">Combos mundialistas</div><div class="ev-rule">Ratio <strong>3:1</strong> Rappi (máx. permitido)</div><span class="ev-tag" style="background:#2a1a04;color:#ef9f27">Ver forecast ↓</span></div></div>
+    <div class="ev-card"><div class="ev-head" style="background:#2a0a0a;color:#f09595">👨 Día del Padre</div><div class="ev-body"><div class="ev-date">19–21 junio · 3 días</div><div class="ev-rule">Normales: <strong>35% off</strong></div><div class="ev-rule">Pro: <strong>40% off</strong></div><span class="ev-tag" style="background:#2a0a0a;color:#f09595">Packs familiares de makis</span></div></div>
+  </div>
+
+  <div class="sec-label">Forecast Copa del Mundo — combos mundialistas Teikit</div>
+  <div class="fc-card">
+    <div class="fc-top"><div class="fc-emoji">⚽</div><div><div class="fc-title">Ejercicio de proyección · Teikit Copa 2026</div><div class="fc-sub">Basado en AOV $391 · ~46k órdenes/mes · temporada ~6 semanas · Julio puro Copa</div></div></div>
+    <div class="fc-stats">
+      <div class="fc-s"><div class="fc-v">+12–18%</div><div class="fc-l">Uplift estimado en órdenes</div></div>
+      <div class="fc-s"><div class="fc-v">~$520</div><div class="fc-l">AOV objetivo con combos</div></div>
+      <div class="fc-s"><div class="fc-v">~$3.2M</div><div class="fc-l">Venta incremental estimada</div></div>
+    </div>
+    <div class="combos">
+      <div class="combo"><div class="combo-name">🏆 Combo Gol</div><div class="combo-det">Dragon Maki + Yakimeshi + bebida · $490 · 25% desc. · Ratio 3:1</div></div>
+      <div class="combo"><div class="combo-name">🥇 Combo Selección</div><div class="combo-det">3 Rollos + Kushiage + postre · $620 · 30% desc. · Ratio 3:1</div></div>
+      <div class="combo"><div class="combo-name">🎯 Combo Partido</div><div class="combo-det">2 Yakimeshi + Aguacate Maki · $380 · 20% desc. · Ratio 2:1</div></div>
+    </div>
+  </div>
+
+  <div class="sec-label">Lo que le pedimos al comercial · Teikit</div>
+  <div class="ask-grid">
+    <div class="ask-item"><div class="ask-num" style="color:#7c6fe0">1</div><div><div class="ask-txt">Activar 2×1 permanente en Dragon, D'Rico y Geisha viernes–domingo</div><div class="ask-sub">Mayor driver de reactivados según venta cruzada · Sep 2025</div></div></div>
+    <div class="ask-item"><div class="ask-num" style="color:#2dce89">2</div><div><div class="ask-txt">Confirmar coinversión 35%/15% en Rollos Clásicos para Pro Days y Hot Sale</div><div class="ask-sub">Producto #1 en volumen: 27k piezas · 16.5% del mix</div></div></div>
+    <div class="ask-item"><div class="ask-num" style="color:#e06b3a">3</div><div><div class="ask-txt">Aprobar 3 combos mundialistas Copa con ratio 3:1 Rappi</div><div class="ask-sub">Forecast +$3.2M incremental en temporada · única ventana con ratio 3:1</div></div></div>
+    <div class="ask-item"><div class="ask-num" style="color:#e05252">4</div><div><div class="ask-txt">Atender Defect Rate 4.44% antes de Julio (objetivo &lt;1.7%)</div><div class="ask-sub">10 sucursales con alertas activas · impacta conversión en picos mundialistas</div></div></div>
+  </div>
+</div>
+
+<!-- ====== LUCKY ====== -->
+<div class="panel" id="pl">
+  <div class="bh lucky-bg">
+    <div><div class="bh-name">🍀 Lucky</div><div class="bh-sub">Request de inversión mayo–julio 2026</div></div>
+    <div class="pills"><span class="pill">Cocina asiática fusión</span><span class="pill">Ratio máx 3:1</span></div>
+  </div>
+
+  <div class="sec-label">Propuesta de inversión por segmento de usuario</div>
+  <div class="seg-grid">
+    <div class="seg-card">
+      <div class="seg-head"><div class="seg-ico" style="background:#0d2a3e">🌱</div><div><div class="seg-title">Nuevos usuarios</div><div class="seg-desc">Captación · foco en ticket de entrada</div></div></div>
+      <table><thead><tr><th>#</th><th>Producto</th><th>Desc.</th><th>Días</th><th>Rappi</th><th>Rest.</th></tr></thead><tbody>
+        <tr><td>1</td><td>MOV de bienvenida</td><td><span class="badge b-lo">$35 off</span></td><td>Mar–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>2</td><td>Plato estrella</td><td><span class="badge b-2x1">2×1</span></td><td>Vie–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>3</td><td>Combo lunch</td><td><span class="badge b-md">30%</span></td><td>Lun–Vie 12–15h</td><td>20%</td><td>10%</td></tr>
+      </tbody></table>
+    </div>
+    <div class="seg-card">
+      <div class="seg-head"><div class="seg-ico" style="background:#0a2a1e">🔁</div><div><div class="seg-title">Retenidos</div><div class="seg-desc">Incrementar frecuencia · foco Pro</div></div></div>
+      <table><thead><tr><th>#</th><th>Producto</th><th>Desc.</th><th>Días</th><th>Rappi</th><th>Rest.</th></tr></thead><tbody>
+        <tr><td>1</td><td>Firma del chef</td><td><span class="badge b-hi">40%</span></td><td>Lun–Jue</td><td>25%</td><td>15%</td></tr>
+        <tr><td>2</td><td>Plato estrella</td><td><span class="badge b-2x1">2×1</span></td><td>Vie–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>3</td><td>Postre + bebida</td><td><span class="badge b-md">25%</span></td><td>Todos</td><td>15%</td><td>10%</td></tr>
+      </tbody></table>
+    </div>
+    <div class="seg-card">
+      <div class="seg-head"><div class="seg-ico" style="background:#2a1208">🔥</div><div><div class="seg-title">Reactivados / Perdidos</div><div class="seg-desc">Win-back agresivo · descuentos profundos</div></div></div>
+      <table><thead><tr><th>#</th><th>Producto</th><th>Desc.</th><th>Días</th><th>Rappi</th><th>Rest.</th></tr></thead><tbody>
+        <tr><td>1</td><td>Menú completo</td><td><span class="badge b-hi">45%</span></td><td>Lun–Dom</td><td>30%</td><td>15%</td></tr>
+        <tr><td>2</td><td>Best-seller</td><td><span class="badge b-2x1">2×1</span></td><td>Vie–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>3</td><td>Combo para 2</td><td><span class="badge b-md">35%</span></td><td>Mié–Dom</td><td>20%</td><td>15%</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="sec-label">Calendario de eventos mayo–julio 2026</div>
+  <div class="ev-grid">
+    <div class="ev-card"><div class="ev-head" style="background:#1a1040;color:#afa9ec">⚡ Pro Days</div><div class="ev-body"><div class="ev-date">19–21 mayo · 3 días</div><div class="ev-rule">Mín. <strong>25% off</strong> · usuarios Pro</div><div class="ev-rule">Ratio <strong>2:1</strong> Rappi : Lucky</div><span class="ev-tag" style="background:#1a1040;color:#afa9ec">Plato estrella + postre gratis</span></div></div>
+    <div class="ev-card"><div class="ev-head" style="background:#0a2a1e;color:#5dcaa5">🛍️ Hot Sale</div><div class="ev-body"><div class="ev-date">27 mayo – 2 junio · 7 días</div><div class="ev-rule">Mín. <strong>40% off</strong> · todos los usuarios</div><div class="ev-rule">Ratio <strong>2:1</strong> Rappi : Lucky</div><span class="ev-tag" style="background:#0a2a1e;color:#5dcaa5">Combo lunch + combo cena</span></div></div>
+    <div class="ev-card"><div class="ev-head" style="background:#2a1a04;color:#ef9f27">⚽ Copa del Mundo</div><div class="ev-body"><div class="ev-date">Junio–Julio · temporada completa</div><div class="ev-rule">Combos para ver partidos en casa</div><div class="ev-rule">Ratio <strong>3:1</strong> Rappi (máx. permitido)</div><span class="ev-tag" style="background:#2a1a04;color:#ef9f27">Combos para 2–4 personas</span></div></div>
+    <div class="ev-card"><div class="ev-head" style="background:#2a0a0a;color:#f09595">👨 Día del Padre</div><div class="ev-body"><div class="ev-date">19–21 junio · 3 días</div><div class="ev-rule">Normales: <strong>35% off</strong></div><div class="ev-rule">Pro: <strong>40% off</strong></div><span class="ev-tag" style="background:#2a0a0a;color:#f09595">Menú especial para papá</span></div></div>
+  </div>
+
+  <div class="sec-label">Forecast Copa del Mundo — combos para ver partidos · Lucky</div>
+  <div class="fc-card">
+    <div class="fc-top"><div class="fc-emoji">⚽</div><div><div class="fc-title">Ejercicio de proyección · Lucky Copa 2026</div><div class="fc-sub">Temporada ~6 semanas · enfoque en cenas y noches de partido</div></div></div>
+    <div class="fc-stats">
+      <div class="fc-s"><div class="fc-v">+15–20%</div><div class="fc-l">Uplift estimado en órdenes</div></div>
+      <div class="fc-s"><div class="fc-v">~$550</div><div class="fc-l">AOV objetivo con combos</div></div>
+      <div class="fc-s"><div class="fc-v">Alta</div><div class="fc-l">Oportunidad noche de partido</div></div>
+    </div>
+    <div class="combos">
+      <div class="combo"><div class="combo-name">🌏 Combo Asia Game</div><div class="combo-det">2 platos + bebidas · para 2 · $520 · 30% desc. · Ratio 3:1</div></div>
+      <div class="combo"><div class="combo-name">🏟️ Combo Estadio</div><div class="combo-det">Tabla compartida + postre · para 4 · $880 · 25% desc. · Ratio 3:1</div></div>
+      <div class="combo"><div class="combo-name">⚡ Lucky Gol</div><div class="combo-det">Individual + bebida + snack · $380 · 20% desc. · Ratio 2:1</div></div>
+    </div>
+  </div>
+
+  <div class="sec-label">Lo que le pedimos al comercial · Lucky</div>
+  <div class="ask-grid">
+    <div class="ask-item"><div class="ask-num" style="color:#7c6fe0">1</div><div><div class="ask-txt">2×1 en plato estrella viernes–domingo para win-back de reactivados</div><div class="ask-sub">Segmento reactivados es el de mayor tamaño relativo en Lucky</div></div></div>
+    <div class="ask-item"><div class="ask-num" style="color:#2dce89">2</div><div><div class="ask-txt">Confirmar 25%/15% coinversión para Pro Days y Hot Sale</div><div class="ask-sub">Ventana clave para captura de nuevos usuarios Pro antes del verano</div></div></div>
+    <div class="ask-item"><div class="ask-num" style="color:#e06b3a">3</div><div><div class="ask-txt">Aprobar 3 combos Copa del Mundo con ratio 3:1 Rappi</div><div class="ask-sub">Única ventana del año con ratio 3:1 disponible</div></div></div>
+    <div class="ask-item"><div class="ask-num" style="color:#e05252">4</div><div><div class="ask-txt">Meta de availability &gt;98% para toda la temporada</div><div class="ask-sub">Picos de demanda en noches de partido requieren operación impecable</div></div></div>
+  </div>
+</div>
+
+<!-- ====== EL HUEQUITO ====== -->
+<div class="panel" id="ph">
+  <div class="bh huequito-bg">
+    <div><div class="bh-name">🥩 El Huequito</div><div class="bh-sub">Tacos de canasta · Foco especial Día del Padre 19–21 junio</div></div>
+    <div class="pills"><span class="pill">Icono CDMX</span><span class="pill">Ratio máx 3:1</span><span class="pill">⭐ Prioridad Día del Padre</span></div>
+  </div>
+
+  <div class="sec-label">Propuesta de inversión por segmento de usuario</div>
+  <div class="seg-grid">
+    <div class="seg-card">
+      <div class="seg-head"><div class="seg-ico" style="background:#0d2a3e">🌱</div><div><div class="seg-title">Nuevos usuarios</div><div class="seg-desc">Primer pedido · descubrir El Huequito</div></div></div>
+      <table><thead><tr><th>#</th><th>Producto</th><th>Desc.</th><th>Días</th><th>Rappi</th><th>Rest.</th></tr></thead><tbody>
+        <tr><td>1</td><td>MOV de bienvenida</td><td><span class="badge b-lo">$30 off</span></td><td>Mar–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>2</td><td>Taco canasta pack</td><td><span class="badge b-2x1">2×1</span></td><td>Vie–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>3</td><td>Combo desayuno</td><td><span class="badge b-md">25%</span></td><td>Lun–Vie 8–12h</td><td>15%</td><td>10%</td></tr>
+      </tbody></table>
+    </div>
+    <div class="seg-card">
+      <div class="seg-head"><div class="seg-ico" style="background:#0a2a1e">🔁</div><div><div class="seg-title">Retenidos</div><div class="seg-desc">Frecuencia · foco en horario desayuno</div></div></div>
+      <table><thead><tr><th>#</th><th>Producto</th><th>Desc.</th><th>Días</th><th>Rappi</th><th>Rest.</th></tr></thead><tbody>
+        <tr><td>1</td><td>Canasta completa</td><td><span class="badge b-hi">35%</span></td><td>Lun–Vie</td><td>20%</td><td>15%</td></tr>
+        <tr><td>2</td><td>Taco especial</td><td><span class="badge b-2x1">2×1</span></td><td>Sáb–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>3</td><td>Pack familiar</td><td><span class="badge b-md">20%</span></td><td>Todos</td><td>10%</td><td>10%</td></tr>
+      </tbody></table>
+    </div>
+    <div class="seg-card">
+      <div class="seg-head"><div class="seg-ico" style="background:#2a1208">🔥</div><div><div class="seg-title">Reactivados / Perdidos</div><div class="seg-desc">Win-back · precio agresivo en clásicos</div></div></div>
+      <table><thead><tr><th>#</th><th>Producto</th><th>Desc.</th><th>Días</th><th>Rappi</th><th>Rest.</th></tr></thead><tbody>
+        <tr><td>1</td><td>Tacos clásicos</td><td><span class="badge b-hi">40%</span></td><td>Lun–Dom</td><td>25%</td><td>15%</td></tr>
+        <tr><td>2</td><td>Canasta especial</td><td><span class="badge b-2x1">2×1</span></td><td>Vie–Dom</td><td>0%</td><td>0%</td></tr>
+        <tr><td>3</td><td>Combo reactivación</td><td><span class="badge b-md">30%</span></td><td>Mar–Dom</td><td>20%</td><td>10%</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="sec-label">Calendario de eventos mayo–julio 2026</div>
+  <div class="ev-grid">
+    <div class="ev-card"><div class="ev-head" style="background:#1a1040;color:#afa9ec">⚡ Pro Days</div><div class="ev-body"><div class="ev-date">19–21 mayo · 3 días</div><div class="ev-rule">Mín. <strong>25% off</strong> · usuarios Pro</div><div class="ev-rule">Ratio <strong>2:1</strong> Rappi : Huequito</div><span class="ev-tag" style="background:#1a1040;color:#afa9ec">Pack canasta + agua</span></div></div>
+    <div class="ev-card"><div class="ev-head" style="background:#0a2a1e;color:#5dcaa5">🛍️ Hot Sale</div><div class="ev-body"><div class="ev-date">27 mayo – 2 junio · 7 días</div><div class="ev-rule">Mín. <strong>40% off</strong> · todos los usuarios</div><div class="ev-rule">Ratio <strong>2:1</strong> Rappi : Huequito</div><span class="ev-tag" style="background:#0a2a1e;color:#5dcaa5">Canasta familiar + extras</span></div></div>
+    <div class="ev-card" style="border:2px solid #993333"><div class="ev-head" style="background:#3a0a0a;color:#f09595">👨 Día del Padre ⭐ FOCO</div><div class="ev-body"><div class="ev-date">19–21 junio · PRIORIDAD MÁXIMA</div><div class="ev-rule">Normales: <strong>35% off</strong></div><div class="ev-rule">Pro: <strong>40% off</strong> · foco El Huequito</div><span class="ev-tag" style="background:#3a0a0a;color:#f09595">⭐ Canasta del Papá + cerveza</span></div></div>
+    <div class="ev-card"><div class="ev-head" style="background:#2a1a04;color:#ef9f27">⚽ Copa del Mundo</div><div class="ev-body"><div class="ev-date">Julio · temporada completa</div><div class="ev-rule">Combos taquiza mundialista</div><div class="ev-rule">Ratio <strong>3:1</strong> Rappi (máx. permitido)</div><span class="ev-tag" style="background:#2a1a04;color:#ef9f27">Taquiza para ver partidos</span></div></div>
+  </div>
+
+  <div class="sec-label">Forecast Día del Padre + Copa del Mundo — combos taquiza · El Huequito</div>
+  <div class="fc-card">
+    <div class="fc-top"><div class="fc-emoji">🥩⚽</div><div><div class="fc-title">Ejercicio de proyección · El Huequito — 2 ventanas clave</div><div class="fc-sub">Día del Padre 19–21 jun (prioridad máxima) + Copa Mundial julio entero</div></div></div>
+    <div class="fc-stats">
+      <div class="fc-s"><div class="fc-v">+20–28%</div><div class="fc-l">Uplift estimado en órdenes</div></div>
+      <div class="fc-s"><div class="fc-v">~$480</div><div class="fc-l">AOV objetivo con combos</div></div>
+      <div class="fc-s"><div class="fc-v">Alta</div><div class="fc-l">Taquiza en casa · ocasión única</div></div>
+    </div>
+    <div class="combos">
+      <div class="combo"><div class="combo-name">👨‍👧 Canasta del Papá</div><div class="combo-det">12 tacos surtidos + agua + postre · $450 · 35–40% desc. · Día del Padre</div></div>
+      <div class="combo"><div class="combo-name">⚽ Taquiza Mundialista</div><div class="combo-det">20 tacos + salsas + bebidas · para 4 · $720 · 30% desc. · Ratio 3:1</div></div>
+      <div class="combo"><div class="combo-name">🏆 Gol de Canasta</div><div class="combo-det">8 tacos + guac + refresco · $340 · 25% desc. · Ratio 2:1</div></div>
+    </div>
+  </div>
+
+  <div class="sec-label">Lo que le pedimos al comercial · El Huequito</div>
+  <div class="ask-grid">
+    <div class="ask-item"><div class="ask-num" style="color:#4a9c2a">1</div><div><div class="ask-txt">Prioridad absoluta: activar 35–40% off Día del Padre 19–21 junio</div><div class="ask-sub">El Huequito es el foco comercial de este evento según instrucción del área</div></div></div>
+    <div class="ask-item"><div class="ask-num" style="color:#2dce89">2</div><div><div class="ask-txt">Diseñar "Canasta del Papá" como SKU especial por evento</div><div class="ask-sub">Pack exclusivo 12 tacos + extras · 35% normales / 40% Pro</div></div></div>
+    <div class="ask-item"><div class="ask-num" style="color:#e06b3a">3</div><div><div class="ask-txt">Aprobar Taquiza Mundialista con ratio 3:1 para julio entero</div><div class="ask-sub">Única ventana del año con ratio 3:1 · combo para 4 personas ideal para ver partidos</div></div></div>
+    <div class="ask-item"><div class="ask-num" style="color:#7c6fe0">4</div><div><div class="ask-txt">Confirmar coinversión 25%/15% para Hot Sale y Pro Days</div><div class="ask-sub">Eventos de alto tráfico para captura de nuevos usuarios antes del verano</div></div></div>
+  </div>
+</div>
+
+<script>
+function sw(b){
+  ['t','l','h'].forEach(id=>{
+    document.getElementById('p'+id).classList.remove('on');
+  });
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('p'+b).classList.add('on');
+  const idx={t:0,l:1,h:2}[b];
+  document.querySelectorAll('.tab')[idx].classList.add('on');
+}
+</script>
+</body>
+</html>
