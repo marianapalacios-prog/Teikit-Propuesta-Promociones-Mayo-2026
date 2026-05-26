@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBR Mayo 2026 · Teikit</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --rappi-orange: #FF441F;
+    --rappi-purple: #6C1FFF;
+    --rappi-dark: #1A0A2E;
+    --bg: #F7F5FF;
+    --card: #FFFFFF;
+    --text: #1A0A2E;
+    --muted: #7B6FA0;
+    --border: #E8E2FF;
+    --green: #00C896;
+    --red: #FF3B5C;
+    --amber: #FFB800;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* NAV */
+  nav {
+    background: var(--rappi-dark);
+    padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    height: 64px;
+    box-shadow: 0 2px 20px rgba(108,31,255,0.3);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; }
+  .nav-logo svg { width: 36px; height: 36px; }
+  .nav-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: #fff; }
+  .nav-title span { color: var(--rappi-orange); }
+  .nav-tabs { display: flex; gap: 4px; }
+  .tab-btn {
+    padding: 8px 18px; border: none; background: transparent;
+    color: rgba(255,255,255,0.6); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; cursor: pointer; border-radius: 6px; transition: all .2s;
+    font-weight: 500;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .tab-btn.active { background: var(--rappi-orange); color: #fff; }
+  .nav-badge { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+  /* PAGES */
+  .page { display: none; padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--rappi-dark) 0%, #2D0D6B 60%, #1A0A2E 100%);
+    border-radius: 20px;
+    padding: 40px 48px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; right: -80px; top: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,68,31,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-label { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--rappi-orange); margin-bottom: 8px; }
+  .hero-title { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 6px; }
+  .hero-sub { font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 28px; }
+  .hero-kpis { display: flex; gap: 32px; }
+  .hkpi { }
+  .hkpi-val { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; color: #fff; }
+  .hkpi-label { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .hkpi-delta { font-size: 12px; margin-top: 2px; }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .neu { color: var(--amber); }
+  .hero-divider { width: 1px; background: rgba(255,255,255,0.1); }
+
+  /* SECTION */
+  .section-title {
+    font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700;
+    color: var(--text); margin-bottom: 16px; margin-top: 32px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::before {
+    content: ''; width: 4px; height: 20px;
+    background: var(--rappi-orange); border-radius: 2px;
+  }
+
+  /* KPI CARDS */
+  .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
+  .kpi-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 18px 16px;
+    border: 1px solid var(--border);
+    transition: box-shadow .2s;
+  }
+  .kpi-card:hover { box-shadow: 0 4px 20px rgba(108,31,255,0.1); }
+  .kpi-card .label { font-size: 11px; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 8px; }
+  .kpi-card .value { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); }
+  .kpi-card .vs { font-size: 11px; margin-top: 4px; }
+  .kpi-card .vs span { font-weight: 600; }
+  .kpi-card.highlight { background: var(--rappi-dark); }
+  .kpi-card.highlight .label { color: rgba(255,255,255,0.5); }
+  .kpi-card.highlight .value { color: #fff; }
+  .kpi-card.highlight .vs { color: rgba(255,255,255,0.4); }
+
+  /* CHART CARDS */
+  .chart-grid { display: grid; gap: 20px; }
+  .chart-grid-2 { grid-template-columns: 1fr 1fr; }
+  .chart-grid-3 { grid-template-columns: 2fr 1fr; }
+  .chart-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border);
+  }
+  .chart-card h3 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .chart-card .subtitle { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .chart-wrap { position: relative; height: 240px; }
+  .chart-wrap-sm { height: 180px; }
+
+  /* TABLE */
+  .data-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px;
+  }
+  .data-table th {
+    background: var(--rappi-dark); color: #fff;
+    padding: 10px 14px; text-align: left;
+    font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+    letter-spacing: .5px;
+  }
+  .data-table th:first-child { border-radius: 8px 0 0 0; }
+  .data-table th:last-child { border-radius: 0 8px 0 0; }
+  .data-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .data-table tr:hover td { background: #F0ECFF; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  }
+  .badge.up { background: #DCFCE7; color: #15803D; }
+  .badge.down { background: #FEE2E2; color: #B91C1C; }
+  .badge.warn { background: #FEF3C7; color: #92400E; }
+  .badge.ok { background: #EDE9FE; color: var(--rappi-purple); }
+
+  /* FUNNEL */
+  .funnel-wrap { display: flex; align-items: flex-end; gap: 6px; height: 200px; padding: 0 8px; }
+  .funnel-bar { flex: 1; border-radius: 8px 8px 0 0; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+  .funnel-bar .bar-pct { position: absolute; top: -22px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
+  .funnel-bar .bar-label { font-size: 10px; color: var(--muted); margin-top: 6px; text-align: center; position: absolute; bottom: -32px; width: 80px; }
+
+  /* METRIC ROW INSIDE CARD */
+  .metric-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-row .m-name { font-size: 13px; color: var(--text); font-weight: 500; }
+  .metric-row .m-val { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
+  .metric-row .m-tgt { font-size: 11px; color: var(--muted); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .dot-green { background: var(--green); }
+  .dot-red { background: var(--red); }
+  .dot-amber { background: var(--amber); }
+
+  /* DEFECT SPECIFIC */
+  .defect-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .dcard { background: var(--card); border-radius: 12px; padding: 16px; border: 1px solid var(--border); text-align: center; }
+  .dcard .dval { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; }
+  .dcard .dlabel { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .dcard.red .dval { color: var(--red); }
+  .dcard.amber .dval { color: var(--amber); }
+  .dcard.green .dval { color: var(--green); }
+  .dcard.purple .dval { color: var(--rappi-purple); }
+
+  /* PROGRESS BAR */
+  .progress-bar { background: var(--border); border-radius: 4px; height: 8px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width .8s; }
+
+  /* PRODUCTS */
+  .product-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .product-row:last-child { border-bottom: none; }
+  .rank { width: 24px; height: 24px; border-radius: 50%; background: var(--rappi-dark); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; }
+  .rank.top { background: var(--rappi-orange); }
+  .p-name { flex: 1; font-size: 13px; font-weight: 500; }
+  .p-units { font-size: 13px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+  .p-bar { width: 80px; }
+
+  /* FUNNEL PAGE */
+  .funnel-table-wrap { overflow-x: auto; }
+
+  /* TOOLTIP */
+  .tooltip-cell { cursor: help; text-decoration: underline dotted; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <svg viewBox="0 0 36 36" fill="none">
+      <rect width="36" height="36" rx="8" fill="#FF441F"/>
+      <path d="M8 26 L14 10 L18 20 L22 14 L28 26" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <div class="nav-title">Teikit · MBR <span>Mayo 2026</span></div>
+  </div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('resumen')">Resumen</button>
+    <button class="tab-btn" onclick="showPage('ventas')">Ventas</button>
+    <button class="tab-btn" onclick="showPage('operaciones')">Operaciones</button>
+    <button class="tab-btn" onclick="showPage('defectos')">Defectos</button>
+    <button class="tab-btn" onclick="showPage('funnel')">Funnel</button>
+    <button class="tab-btn" onclick="showPage('productos')">Productos</button>
+  </div>
+  <div class="nav-badge">Datos: Abr – May 2026 · MX</div>
+</nav>
+
+<!-- ═══════════════════ RESUMEN ═══════════════════ -->
+<div id="page-resumen" class="page active">
+  <div class="hero">
+    <div class="hero-label">Monthly Business Review · Sushi Shop Teikit</div>
+    <div class="hero-title">Mayo 2026</div>
+    <div class="hero-sub">53 sucursales · 9 ciudades · Segmento: Local Chain · KAM Jr.</div>
+    <div class="hero-kpis">
+      <div class="hkpi">
+        <div class="hkpi-val">$1.06M</div>
+        <div class="hkpi-label">Ventas May</div>
+        <div class="hkpi-delta neg">▼ 18.3% vs Abr</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hkpi">
+        <div class="hkpi-val">3,221</div>
+        <div class="hkpi-label">Órdenes</div>
+        <div class="hkpi-delta pos">▲ 3.4% vs Abr</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hkpi">
+        <div class="hkpi-val">$325</div>
+        <div class="hkpi-label">AOV</div>
+        <div class="hkpi-delta neg">▼ 21.0% vs Abr</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hkpi">
+        <div class="hkpi-val">2.90%</div>
+        <div class="hkpi-label">Defect Rate</div>
+        <div class="hkpi-delta pos">▼ 0.94pp vs Abr</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hkpi">
+        <div class="hkpi-val">99.3%</div>
+        <div class="hkpi-label">Availability</div>
+        <div class="hkpi-delta pos">▲ 0.8pp vs Abr</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hkpi">
+        <div class="hkpi-val">8.0%</div>
+        <div class="hkpi-label">CVR Global</div>
+        <div class="hkpi-delta neg">▼ vs Abr 9.6%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card highlight">
+      <div class="label">Ventas vs LY</div>
+      <div class="value">-30.9%</div>
+      <div class="vs"><span class="neg">▼ Mayo '25: $1.51M</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Órdenes vs LY</div>
+      <div class="value">-13.7%</div>
+      <div class="vs"><span class="neg">LY: 3,784</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">AOV vs LY</div>
+      <div class="value">-20.0%</div>
+      <div class="vs"><span class="neg">LY: $406</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Markdown</div>
+      <div class="value">$305K</div>
+      <div class="vs"><span class="neg">Abr: $474K ▼ 35.6%</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Burn Rappi</div>
+      <div class="value">$116K</div>
+      <div class="vs"><span class="neg">Abr: $83.6K ▲ 39%</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Revenue Neto</div>
+      <div class="value">$43.6K</div>
+      <div class="vs"><span class="neg">Abr: $50.4K ▼ 13.5%</span></div>
+    </div>
+  </div>
+
+  <div class="section-title">Tendencia 2026</div>
+  <div class="chart-grid chart-grid-3">
+    <div class="chart-card">
+      <h3>Ventas y Órdenes 2026</h3>
+      <div class="subtitle">Ene – May 2026 · Ventas en MXN (eje izq.) · Órdenes (eje der.)</div>
+      <div class="chart-wrap"><canvas id="chartVentasOrdenes"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Métricas Operativas — Mayo</h3>
+      <div class="subtitle">vs objetivos de cuentas nacionales</div>
+      <div class="metric-row">
+        <span class="m-name"><span class="status-dot dot-green"></span>Availability</span>
+        <span>
+          <span class="m-tgt">Target: 98%</span>
+          <span class="m-val" style="color:var(--green)"> 99.3%</span>
+        </span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name"><span class="status-dot dot-green"></span>% Cancelaciones</span>
+        <span>
+          <span class="m-tgt">Max: 0.7%</span>
+          <span class="m-val" style="color:var(--green)"> 0.12%</span>
+        </span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name"><span class="status-dot dot-amber"></span>Cooking Time</span>
+        <span>
+          <span class="m-tgt">Target: 15 min</span>
+          <span class="m-val" style="color:var(--amber)"> 18.81 min</span>
+        </span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name"><span class="status-dot dot-green"></span>Defect Rate</span>
+        <span>
+          <span class="m-tgt">Max: 1.2% (aliado)</span>
+          <span class="m-val" style="color:var(--green)"> 2.90%</span>
+        </span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name"><span class="status-dot dot-red"></span>RT en Tienda</span>
+        <span>
+          <span class="m-tgt">Max: 3 min</span>
+          <span class="m-val" style="color:var(--red)"> 6.13 min</span>
+        </span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name"><span class="status-dot dot-red"></span>Tiempo Total Entrega</span>
+        <span>
+          <span class="m-tgt">Target: 30 min</span>
+          <span class="m-val" style="color:var(--red)"> 53.41 min</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Ventas por Ciudad — Mayo 2026</div>
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <h3>Venta por Ciudad</h3>
+      <div class="subtitle">Mayo 2026 vs Abril 2026</div>
+      <div class="chart-wrap"><canvas id="chartCiudad"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Órdenes por Ciudad</h3>
+      <div class="subtitle">Δ % vs mes anterior</div>
+      <div class="chart-wrap"><canvas id="chartOrdCiudad"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ VENTAS ═══════════════════ -->
+<div id="page-ventas" class="page">
+  <div class="section-title" style="margin-top:0">Comparativo Mensual — Abr vs May 2026</div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi-card">
+      <div class="label">Venta May</div>
+      <div class="value">$1,005,956</div>
+      <div class="vs">Abr: $1,280,978 <span class="neg">▼ 21.47%</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Órdenes May</div>
+      <div class="value">3,145</div>
+      <div class="vs">Abr: 3,114 <span class="pos">▲ 1.00%</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">AOV May</div>
+      <div class="value">$319.86</div>
+      <div class="vs">Abr: $411.36 <span class="neg">▼ 22.24%</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Markdown May</div>
+      <div class="value">$305,087</div>
+      <div class="vs">Abr: $474,042 <span class="neg">▼ 35.6%</span></div>
+    </div>
+  </div>
+
+  <div class="section-title">Detalle por Ciudad</div>
+  <div class="chart-card" style="overflow:auto">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Ciudad</th>
+          <th class="num">Venta Abr</th>
+          <th class="num">Venta May</th>
+          <th class="num">Δ Ventas</th>
+          <th class="num">Órd. Abr</th>
+          <th class="num">Órd. May</th>
+          <th class="num">Δ Órd.</th>
+          <th class="num">AOV Abr</th>
+          <th class="num">AOV May</th>
+          <th class="num">Δ AOV</th>
+        </tr>
+      </thead>
+      <tbody id="tablaCiudad"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Tendencia YTD — Ventas Mensuales (Ene–May 2026)</div>
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <h3>Ventas Mensuales 2025 vs 2026</h3>
+      <div class="subtitle">MXN · Mismas stores</div>
+      <div class="chart-wrap"><canvas id="chartYTD"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Órdenes Mensuales 2025 vs 2026</h3>
+      <div class="subtitle">Unidades</div>
+      <div class="chart-wrap"><canvas id="chartYTDOrds"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Comportamiento de Usuarios — Mayo 2026</div>
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <h3>Tipos de Usuario</h3>
+      <div class="subtitle">Distribución Mayo 2026</div>
+      <div class="chart-wrap chart-wrap-sm"><canvas id="chartUsuarios"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Prime / No Prime</h3>
+      <div class="subtitle">Distribución de órdenes y ventas por tipo de usuario Mayo</div>
+      <div class="metric-row">
+        <span class="m-name">🔵 Prime — Órdenes</span>
+        <span><span class="m-val">2,138</span> <span class="badge ok">66.4%</span></span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name">⚪ No Prime — Órdenes</span>
+        <span><span class="m-val">1,083</span> <span class="badge warn">33.6%</span></span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name">🔵 Prime — Venta Portal</span>
+        <span><span class="m-val">$707,147</span> <span class="badge ok">67.6%</span></span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name">⚪ No Prime — Venta Portal</span>
+        <span><span class="m-val">$339,645</span> <span class="badge warn">32.4%</span></span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name">🔵 Prime — GMV</span>
+        <span><span class="m-val">$1,134,194</span> <span class="badge ok">67.1%</span></span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name">⚪ No Prime — GMV</span>
+        <span><span class="m-val">$557,420</span> <span class="badge warn">32.9%</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ OPERACIONES ═══════════════════ -->
+<div id="page-operaciones" class="page">
+  <div class="section-title" style="margin-top:0">Métricas Operativas — Abr vs May</div>
+  <div class="defect-summary">
+    <div class="dcard green">
+      <div class="dval">99.3%</div>
+      <div class="dlabel">Availability (▲0.8pp)</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:99.3%;background:var(--green)"></div></div>
+    </div>
+    <div class="dcard green">
+      <div class="dval">0.12%</div>
+      <div class="dlabel">% Cancelaciones (▼0.04pp)</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:17%;background:var(--green)"></div></div>
+    </div>
+    <div class="dcard amber">
+      <div class="dval">18.81 min</div>
+      <div class="dlabel">Cooking Time (▼2.66 min)</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:63%;background:var(--amber)"></div></div>
+    </div>
+    <div class="dcard red">
+      <div class="dval">53.41 min</div>
+      <div class="dlabel">Tiempo Total Entrega (▲0.72)</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--red)"></div></div>
+    </div>
+  </div>
+
+  <div class="section-title">WO Service — Stores con Alertas (Mayo 2026)</div>
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <h3>By Defect Rate</h3>
+      <div class="subtitle">Stores con mayor defect rate en órdenes finalizadas</div>
+      <table class="data-table">
+        <thead><tr><th>Store</th><th class="num">Quejas</th><th class="num">Órd. Fin.</th><th class="num">DR%</th></tr></thead>
+        <tbody>
+          <tr><td>Teikit Interlomas</td><td class="num">6</td><td class="num">72</td><td class="num"><span class="badge down">8.33%</span></td></tr>
+          <tr><td>Teikit Narvarte</td><td class="num">5</td><td class="num">97</td><td class="num"><span class="badge down">5.15%</span></td></tr>
+          <tr><td>Teikit Universidad</td><td class="num">8</td><td class="num">172</td><td class="num"><span class="badge down">4.65%</span></td></tr>
+          <tr><td>Teikit Prado Norte</td><td class="num">3</td><td class="num">74</td><td class="num"><span class="badge warn">4.05%</span></td></tr>
+          <tr><td>Teikit Toluca Colón</td><td class="num">3</td><td class="num">90</td><td class="num"><span class="badge warn">3.33%</span></td></tr>
+          <tr><td>Teikit Las Águilas</td><td class="num">4</td><td class="num">128</td><td class="num"><span class="badge warn">3.13%</span></td></tr>
+          <tr><td>Teikit San Jeronimo</td><td class="num">2</td><td class="num">90</td><td class="num"><span class="badge warn">2.22%</span></td></tr>
+          <tr><td>Total</td><td class="num">91</td><td class="num">2,400</td><td class="num"><span class="badge ok">3.79%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chart-card">
+      <h3>By Availability</h3>
+      <div class="subtitle">Stores por debajo del target (98%)</div>
+      <table class="data-table">
+        <thead><tr><th>Store</th><th class="num">Availability</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Teikit Querétaro</td><td class="num">0.0%</td><td><span class="badge down">Crítico</span></td></tr>
+          <tr><td>Teikit Tlalnepantla</td><td class="num">93.4%</td><td><span class="badge down">Bajo</span></td></tr>
+          <tr><td>Teikit Centro</td><td class="num">95.5%</td><td><span class="badge warn">Atención</span></td></tr>
+          <tr><td>Teikit Xochimilco</td><td class="num">95.5%</td><td><span class="badge warn">Atención</span></td></tr>
+          <tr><td>Teikit Roma Nte.</td><td class="num">95.5%</td><td><span class="badge warn">Atención</span></td></tr>
+          <tr><td>Teikit Patio Chalco</td><td class="num">97.0%</td><td><span class="badge warn">Atención</span></td></tr>
+          <tr><td>Teikit Tepepan</td><td class="num">97.9%</td><td><span class="badge warn">Atención</span></td></tr>
+          <tr><td>Total Marca</td><td class="num">99.3%</td><td><span class="badge up">✓ OK</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="chart-grid chart-grid-2" style="margin-top:20px">
+    <div class="chart-card">
+      <h3>By Wait Time RT (Top stores)</h3>
+      <div class="subtitle">Tiempo repartidor en tienda (min) — objetivo: máx 3 min</div>
+      <div class="chart-wrap"><canvas id="chartRT"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>By Cooking Time (Top stores)</h3>
+      <div class="subtitle">Tiempo de preparación (min) — objetivo aliado: 15 min</div>
+      <div class="chart-wrap"><canvas id="chartCT"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Tiempo Total Entrega — Top stores más lentos</div>
+  <div class="chart-card">
+    <h3>By Total Entrega</h3>
+    <div class="subtitle">Objetivo: 30 min. Stores con mayor tiempo de entrega total</div>
+    <div class="chart-wrap"><canvas id="chartEntrega"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ DEFECTOS ═══════════════════ -->
+<div id="page-defectos" class="page">
+  <div class="section-title" style="margin-top:0">Defect Rate — Teikit MX (Feb–May 2026)</div>
+  <div class="defect-summary">
+    <div class="dcard amber">
+      <div class="dval">2.90%</div>
+      <div class="dlabel">DR May (Teikit)</div>
+    </div>
+    <div class="dcard green">
+      <div class="dval">3.84%</div>
+      <div class="dlabel">DR Abr → May ▼ 0.94pp</div>
+    </div>
+    <div class="dcard purple">
+      <div class="dval">3.84%</div>
+      <div class="dlabel">DR MX General (Abr)</div>
+    </div>
+    <div class="dcard purple">
+      <div class="dval">4.05%</div>
+      <div class="dlabel">DR Rappi Mx Global</div>
+    </div>
+  </div>
+
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <h3>Defect Rate Semanal — Teikit</h3>
+      <div class="subtitle">Mar–May 2026 · Comparado con Rappi MX General</div>
+      <div class="chart-wrap"><canvas id="chartDR"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Breakdown por Categoría</h3>
+      <div class="subtitle">Defect Rate by reason — semanas seleccionadas</div>
+      <div class="chart-wrap"><canvas id="chartDRcat"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Compensaciones — Teikit vs Rappi MX</div>
+  <div class="chart-grid chart-grid-3">
+    <div class="chart-card">
+      <h3>Compensaciones (USD) por semana</h3>
+      <div class="subtitle">Ally vs Rappi Compensation · Mar–May 2026</div>
+      <div class="chart-wrap"><canvas id="chartComp"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Resumen Compensaciones</h3>
+      <div class="subtitle">Total Mar–May 2026</div>
+      <div class="metric-row">
+        <span class="m-name">Rappi Comp Total</span>
+        <span class="m-val">$511 USD</span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name">Rappi Comp ACV</span>
+        <span class="m-val">~$2.0 USD/wk</span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name">Mayor semana (Bad)</span>
+        <span class="m-val" style="color:var(--red)">Sem 20/04: $108</span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name">Razón principal</span>
+        <span class="m-val">Missing (2.57%)</span>
+      </div>
+      <div class="metric-row">
+        <span class="m-name">2da razón</span>
+        <span class="m-val">Bad Quality (1.21%)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Comparación MX — Defect Rate por País</div>
+  <div class="chart-card">
+    <h3>Weekly Defect Rate by Country (semanas recientes)</h3>
+    <div class="subtitle">MX = 3.84% · Global Rappi 4.05%</div>
+    <div class="chart-wrap" style="height:200px"><canvas id="chartCountry"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ FUNNEL ═══════════════════ -->
+<div id="page-funnel" class="page">
+  <div class="section-title" style="margin-top:0">Funnel de Conversión — Mayo 2026 · MX</div>
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <h3>Funnel Global Teikit</h3>
+      <div class="subtitle">40,039 Clicks totales · Conversión final: 8.0%</div>
+      <div style="display:flex;gap:12px;align-items:flex-end;height:220px;padding:0 8px 40px">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+          <div style="font-family:Syne,sans-serif;font-size:12px;font-weight:700;margin-bottom:4px">100%</div>
+          <div style="width:100%;height:180px;background:linear-gradient(180deg,#6C1FFF,#9B59FF);border-radius:8px 8px 0 0"></div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px">Clicks<br>40,039</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+          <div style="font-family:Syne,sans-serif;font-size:12px;font-weight:700;margin-bottom:4px">20.4%</div>
+          <div style="width:100%;height:36px;background:linear-gradient(180deg,#FF441F,#FF6B4A);border-radius:8px 8px 0 0"></div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px">ATC<br>~8,168</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+          <div style="font-family:Syne,sans-serif;font-size:12px;font-weight:700;margin-bottom:4px">80.2%</div>
+          <div style="width:100%;height:29px;background:linear-gradient(180deg,#FFB800,#FFCE58);border-radius:8px 8px 0 0"></div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px">PTC<br>~6,551</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+          <div style="font-family:Syne,sans-serif;font-size:12px;font-weight:700;margin-bottom:4px">55.7%</div>
+          <div style="width:100%;height:21px;background:linear-gradient(180deg,#00C896,#33D9AA);border-radius:8px 8px 0 0"></div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px">OP<br>~3,648</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+          <div style="font-family:Syne,sans-serif;font-size:12px;font-weight:700;margin-bottom:4px">87.7%</div>
+          <div style="width:100%;height:18px;background:linear-gradient(180deg,#0EA5E9,#38BDF8);border-radius:8px 8px 0 0"></div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px">OPC<br>~3,199</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+          <div style="font-family:Syne,sans-serif;font-size:12px;font-weight:700;margin-bottom:4px">8.0%</div>
+          <div style="width:100%;height:14px;background:linear-gradient(180deg,var(--rappi-dark),#3D2570);border-radius:8px 8px 0 0"></div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px">OPC Final<br>~3,203</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Conversión por Step</h3>
+      <div class="subtitle">Clicks → Add to Cart → Purchase to Cart → Order Placed → Completed</div>
+      <div class="chart-wrap"><canvas id="chartFunnelLine"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Top Stores por CVR — Mayo 2026</div>
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <h3>Top 10 Stores — Mayor CVR</h3>
+      <div class="subtitle">% Conversión por store (todos los clicks)</div>
+      <div class="chart-wrap"><canvas id="chartCVRtop"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Top 10 Stores — Mayor Clicks (Tráfico)</h3>
+      <div class="subtitle">Stores con más tráfico mayo 2026</div>
+      <div class="chart-wrap"><canvas id="chartClicksTop"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PRODUCTOS ═══════════════════ -->
+<div id="page-productos" class="page">
+  <div class="section-title" style="margin-top:0">Top Productos — Mayo 2026</div>
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <h3>Ranking por Piezas Vendidas</h3>
+      <div class="subtitle">Top 12 · 7,863 total piezas en mayo · Δ vs Abril</div>
+      <div id="productsRanking"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Mix de Ventas — Top 10 Productos</h3>
+      <div class="subtitle">% del total de ventas de mayo (MXN)</div>
+      <div class="chart-wrap"><canvas id="chartProductosMix"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Momentos de Consumo — Mayo 2026</div>
+  <div class="chart-grid chart-grid-2">
+    <div class="chart-card">
+      <h3>Órdenes por Hora del Día</h3>
+      <div class="subtitle">Distribución horaria · Mayo 2026 vs Abril</div>
+      <div class="chart-wrap"><canvas id="chartHoras"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Órdenes por Día de la Semana</h3>
+      <div class="subtitle">Viernes y Fines de Semana dominan · Mayo 2026</div>
+      <div class="chart-wrap"><canvas id="chartDias"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const MONTHS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+const ventas2025 = [1667935,1266072,1513395,1370904,1514932,1362243,1468178,1619836,1460197,1474556,1702315,1169419];
+const ventas2026 = [1453561,1114591,991072,1278781,1056329,null,null,null,null,null,null,null];
+const ords2025   = [4466,3253,3768,3523,3784,3549,3933,4379,4263,4085,4486,3064];
+const ords2026   = [3988,2997,2143,3110,3328,null,null,null,null,null,null,null];
+
+const ciudadData = [
+  {ciudad:'Ciudad de México', vtaAbr:1045735, vtaMay:803635, ordAbr:2526, ordMay:2456, aovAbr:413.99, aovMay:327.21},
+  {ciudad:'Toluca',           vtaAbr:72788,   vtaMay:60423,  ordAbr:162,  ordMay:182,  aovAbr:449.31, aovMay:332.00},
+  {ciudad:'Cuernavaca',       vtaAbr:43622,   vtaMay:44022,  ordAbr:102,  ordMay:172,  aovAbr:427.67, aovMay:255.94},
+  {ciudad:'Guanajuato',       vtaAbr:36648,   vtaMay:25804,  ordAbr:101,  ordMay:74,   aovAbr:362.85, aovMay:348.70},
+  {ciudad:'Pachuca',          vtaAbr:36088,   vtaMay:24092,  ordAbr:82,   ordMay:62,   aovAbr:440.09, aovMay:388.59},
+  {ciudad:'Puebla',           vtaAbr:29204,   vtaMay:24370,  ordAbr:87,   ordMay:93,   aovAbr:335.68, aovMay:262.04},
+  {ciudad:'San Luis Potosí',  vtaAbr:11514,   vtaMay:14022,  ordAbr:38,   ordMay:54,   aovAbr:303.01, aovMay:259.67},
+  {ciudad:'Valle de Chalco',  vtaAbr:5379,    vtaMay:9587,   ordAbr:16,   ordMay:52,   aovAbr:336.17, aovMay:184.37},
+];
+
+// Defect Rate Weekly Teikit
+const drWeeks = ['16/03','23/03','30/03','06/04','13/04','20/04','27/04','04/05','11/05','18/05'];
+const drTeikit  = [4.09,4.90,5.06,3.56,3.70,4.18,3.98,4.04,3.92,4.58];
+const drMxGen   = [3.90,3.70,3.83,4.01,4.10,4.23,3.82,4.07,4.30,4.25];
+
+const compUSD = [0,0,0,37,58,108,79,29,43,106]; // Rappi comp by week
+
+// Products
+const products = [
+  {rank:1, rankLM:1, name:'Dragon Maki',         units:1537, unitsLM:1470, delta:4.56,  sales:19893},
+  {rank:2, rankLM:3, name:'California Maki',      units:468,  unitsLM:440,  delta:6.36,  sales:4703},
+  {rank:3, rankLM:2, name:'Geisha Maki',           units:453,  unitsLM:541,  delta:-16.27,sales:5845},
+  {rank:4, rankLM:5, name:"D' Rico Maki",          units:343,  unitsLM:341,  delta:0.59,  sales:4934},
+  {rank:5, rankLM:8, name:'Aguacate Maki',         units:296,  unitsLM:277,  delta:6.86,  sales:2949},
+  {rank:6, rankLM:4, name:'Kushiage Queso',        units:276,  unitsLM:407,  delta:-32.19,sales:2303},
+  {rank:7, rankLM:7, name:'Yakimeshi c/ Tampico',  units:257,  unitsLM:304,  delta:-15.46,sales:2018},
+  {rank:8, rankLM:6, name:'Yakimeshi Teikit',      units:238,  unitsLM:307,  delta:-22.48,sales:2358},
+  {rank:9, rankLM:14,name:'Yakimeshi Vegetales',   units:209,  unitsLM:175,  delta:19.43, sales:1328},
+  {rank:10,rankLM:16,name:'Filadelfia Maki',       units:169,  unitsLM:168,  delta:0.60,  sales:1673},
+  {rank:11,rankLM:13,name:'Queso Maki',            units:164,  unitsLM:183,  delta:-10.38,sales:1646},
+  {rank:12,rankLM:9, name:'Yakimeshi Arrachera',   units:145,  unitsLM:256,  delta:-43.36,sales:1231},
+];
+
+// Funnel by store
+const funnelData = [
+  {store:'Teikit Las Águilas',      clicks:793,  cvr:20.9},
+  {store:'Teikit Universidad',      clicks:1124, cvr:20.2},
+  {store:'Teikit Del Valle',        clicks:493,  cvr:21.8},
+  {store:'Teikit Roma Nte.',        clicks:346,  cvr:18.3},
+  {store:'Teikit City Shop del Valle',clicks:623,cvr:20.1},
+  {store:'Teikit WTC',              clicks:527,  cvr:17.6},
+  {store:'Teikit Insurgentes Sur',  clicks:516,  cvr:16.9},
+  {store:'Teikit Rio Lerma',        clicks:615,  cvr:18.0},
+  {store:'Teikit Parques Polanco',  clicks:652,  cvr:18.5},
+  {store:'Teikit Toluca Colón',     clicks:807,  cvr:11.2},
+];
+
+// Colors
+const C_ORANGE = '#FF441F';
+const C_PURPLE = '#6C1FFF';
+const C_GREEN  = '#00C896';
+const C_AMBER  = '#FFB800';
+const C_DARK   = '#1A0A2E';
+const C_MUTED  = '#7B6FA0';
+
+Chart.defaults.font.family = 'DM Sans';
+Chart.defaults.color = '#7B6FA0';
+
+function pct(a, b){ return (((a-b)/b)*100).toFixed(1); }
+function fmt(n){ return n>=1e6? '$'+(n/1e6).toFixed(2)+'M' : n>=1e3? '$'+(n/1e3).toFixed(0)+'K' : '$'+n.toLocaleString(); }
+
+// ─── BUILD CHARTS ─────────────────────────────────────────────────────────────
+
+// Ventas + Ordenes 2026 Trend
+new Chart(document.getElementById('chartVentasOrdenes'), {
+  type:'bar',
+  data:{
+    labels:['Ene','Feb','Mar','Abr','May'],
+    datasets:[
+      {label:'Ventas 2026', data:ventas2026.slice(0,5), backgroundColor:[C_PURPLE+'CC',C_PURPLE+'CC',C_PURPLE+'CC',C_PURPLE+'CC',C_ORANGE+'CC'], yAxisID:'y', borderRadius:6},
+      {label:'Ventas 2025', data:ventas2025.slice(0,5), backgroundColor:'rgba(255,255,255,0.15)', borderColor:C_MUTED, borderWidth:1.5, type:'line', yAxisID:'y', tension:.4, pointRadius:4},
+      {label:'Órdenes 2026', data:ords2026.slice(0,5), type:'line', borderColor:C_GREEN, backgroundColor:'transparent', yAxisID:'y2', tension:.4, borderWidth:2, pointRadius:4, pointBackgroundColor:C_GREEN},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index', intersect:false},
+    plugins:{legend:{display:true, labels:{boxWidth:10, font:{size:11}}}},
+    scales:{
+      y:{ticks:{callback:v=>fmt(v)}, grid:{color:'#F0ECFF'}},
+      y2:{position:'right', ticks:{color:C_GREEN}, grid:{display:false}},
+    }
+  }
+});
+
+// Ciudad Ventas
+new Chart(document.getElementById('chartCiudad'), {
+  type:'bar',
+  data:{
+    labels: ciudadData.map(d=>d.ciudad.replace('Ciudad de México','CDMX')),
+    datasets:[
+      {label:'Abr', data:ciudadData.map(d=>d.vtaAbr), backgroundColor:C_PURPLE+'99', borderRadius:4},
+      {label:'May', data:ciudadData.map(d=>d.vtaMay), backgroundColor:C_ORANGE+'CC', borderRadius:4},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{legend:{display:true, labels:{boxWidth:10,font:{size:11}}}},
+    scales:{x:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}, grid:{color:'#F0ECFF'}},y:{grid:{display:false}}}
+  }
+});
+
+// Ciudad Ordenes
+new Chart(document.getElementById('chartOrdCiudad'), {
+  type:'bar',
+  data:{
+    labels: ciudadData.map(d=>d.ciudad.replace('Ciudad de México','CDMX')),
+    datasets:[{
+      label:'Δ Órdenes %',
+      data: ciudadData.map(d=>parseFloat(pct(d.ordMay,d.ordAbr))),
+      backgroundColor: ciudadData.map(d=>parseFloat(pct(d.ordMay,d.ordAbr))>=0?C_GREEN+'BB':C_ORANGE+'BB'),
+      borderRadius:4,
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{callback:v=>v+'%'}, grid:{color:'#F0ECFF'}, min:-60, max:250},
+      y:{grid:{display:false}}
+    }
+  }
+});
+
+// YTD Ventas comparison
+new Chart(document.getElementById('chartYTD'), {
+  type:'line',
+  data:{
+    labels: MONTHS,
+    datasets:[
+      {label:'Ventas 2026', data:ventas2026, borderColor:C_ORANGE, backgroundColor:C_ORANGE+'22', fill:true, tension:.4, borderWidth:2.5, pointRadius:4, pointBackgroundColor:C_ORANGE, spanGaps:true},
+      {label:'Ventas 2025', data:ventas2025, borderColor:C_PURPLE, backgroundColor:'transparent', tension:.4, borderWidth:2, borderDash:[5,3], pointRadius:3, spanGaps:true},
+    ]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10,font:{size:11}}}}, scales:{y:{ticks:{callback:v=>fmt(v)}, grid:{color:'#F0ECFF'}}, x:{grid:{display:false}}}}
+});
+
+new Chart(document.getElementById('chartYTDOrds'), {
+  type:'line',
+  data:{
+    labels: MONTHS,
+    datasets:[
+      {label:'Órdenes 2026', data:ords2026, borderColor:C_GREEN, backgroundColor:C_GREEN+'22', fill:true, tension:.4, borderWidth:2.5, pointRadius:4, pointBackgroundColor:C_GREEN, spanGaps:true},
+      {label:'Órdenes 2025', data:ords2025, borderColor:C_MUTED, backgroundColor:'transparent', tension:.4, borderWidth:2, borderDash:[5,3], pointRadius:3},
+    ]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10,font:{size:11}}}}, scales:{y:{grid:{color:'#F0ECFF'}}, x:{grid:{display:false}}}}
+});
+
+// Usuarios donut
+new Chart(document.getElementById('chartUsuarios'), {
+  type:'doughnut',
+  data:{
+    labels:['First Order (33%)','Reactivated (47%)','Retained (19%)'],
+    datasets:[{data:[3103,4456,1824], backgroundColor:[C_ORANGE,C_PURPLE,C_GREEN], hoverOffset:6, borderWidth:2, borderColor:'#fff'}]
+  },
+  options:{responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:11}}}}}
+});
+
+// RT Chart
+const rtStores = ['Patio Chalco','Tlatelolco','San juan CVCA','Alaia Guanajuato','Plaza Portal D10','Tonala Roma','San Luis','San Antonio','Copilco','San Javier Pachuca'];
+const rtVals   = [16.15,12.75,11.76,11.23,10.82,10.45,10.35,10.07,9.71,9.69];
+new Chart(document.getElementById('chartRT'), {
+  type:'bar', indexAxis:'y',
+  data:{labels:rtStores.map(s=>s.length>18?s.substring(0,18)+'…':s), datasets:[{data:rtVals, backgroundColor:rtVals.map(v=>v>10?C_ORANGE+'CC':C_AMBER+'CC'), borderRadius:4}]},
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, annotation:{annotations:{line1:{type:'line', xMin:3, xMax:3, borderColor:C_GREEN, borderWidth:2, borderDash:[4,4]}}}},
+    scales:{x:{ticks:{callback:v=>v+' min'}, grid:{color:'#F0ECFF'}, max:20}, y:{grid:{display:false}, ticks:{font:{size:10}}}}
+  }
+});
+
+// CT Chart
+const ctStores = ['San Diego CVCA','Alaia Guanajuato','Taxqueña','Acoxpa','San Jeronimo','Parques Polanco','Cdz. Águilas','Satélite','San Luis','Gran Sur'];
+const ctVals   = [28.15,25.31,25.07,24.50,24.28,24.14,24.03,23.92,23.55,23.43];
+new Chart(document.getElementById('chartCT'), {
+  type:'bar', indexAxis:'y',
+  data:{labels:ctStores.map(s=>s.length>18?s.substring(0,18)+'…':s), datasets:[{data:ctVals, backgroundColor:ctVals.map(v=>v>25?C_ORANGE+'CC':C_AMBER+'CC'), borderRadius:4}]},
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{ticks:{callback:v=>v+' min'}, grid:{color:'#F0ECFF'}, max:32}, y:{grid:{display:false}, ticks:{font:{size:10}}}}
+  }
+});
+
+// Entrega Chart
+const entStores = ['San Luis','Alaia GTO','Perinorte','Patio Chalco','San Antonio','Tlatelolco','San Javier Pachuca','Las Antenas'];
+const entVals   = [82.98,69.30,69.05,67.53,64.72,63.49,63.34,63.06];
+new Chart(document.getElementById('chartEntrega'), {
+  type:'bar', indexAxis:'y',
+  data:{labels:entStores, datasets:[{data:entVals, backgroundColor:entVals.map(v=>v>60?C_ORANGE+'CC':C_AMBER+'CC'), borderRadius:4}]},
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{ticks:{callback:v=>v+' min'}, grid:{color:'#F0ECFF'}}, y:{grid:{display:false}}}
+  }
+});
+
+// DR Weekly
+new Chart(document.getElementById('chartDR'), {
+  type:'line',
+  data:{
+    labels: drWeeks,
+    datasets:[
+      {label:'Teikit DR', data:drTeikit, borderColor:C_ORANGE, backgroundColor:C_ORANGE+'22', fill:true, tension:.4, borderWidth:2.5, pointRadius:4, pointBackgroundColor:C_ORANGE},
+      {label:'Rappi MX General', data:drMxGen, borderColor:C_MUTED, borderDash:[5,3], tension:.4, borderWidth:2, pointRadius:3},
+    ]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10,font:{size:11}}}},
+    scales:{y:{ticks:{callback:v=>v+'%'}, grid:{color:'#F0ECFF'}, min:3, max:6}, x:{grid:{display:false}}}
+  }
+});
+
+// DR by Category
+new Chart(document.getElementById('chartDRcat'), {
+  type:'bar',
+  data:{
+    labels: drWeeks,
+    datasets:[
+      {label:'Missing', data:[2.88,2.15,1.89,2.84,1.98,2.51,2.47,2.27,2.17,2.57], backgroundColor:C_PURPLE+'CC', borderRadius:2},
+      {label:'Bad',     data:[0.96,1.34,1.48,0.54,0.61,0.67,1.45,1.14,1.11,0.79], backgroundColor:C_ORANGE+'CC', borderRadius:2},
+      {label:'Wrong',   data:[0.24,1.89,1.54,0.70,0.74,0.79,0.99,1.14,0.86,1.21], backgroundColor:C_AMBER+'CC', borderRadius:2},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, scales:{
+      x:{stacked:true, grid:{display:false}},
+      y:{stacked:true, ticks:{callback:v=>v+'%'}, grid:{color:'#F0ECFF'}}
+    },
+    plugins:{legend:{labels:{boxWidth:10,font:{size:11}}}}
+  }
+});
+
+// Comp
+new Chart(document.getElementById('chartComp'), {
+  type:'bar',
+  data:{
+    labels: drWeeks,
+    datasets:[{label:'Rappi Comp USD', data:compUSD, backgroundColor:C_ORANGE+'BB', borderRadius:4}]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    scales:{y:{ticks:{callback:v=>'$'+v}, grid:{color:'#F0ECFF'}}, x:{grid:{display:false}}}
+  }
+});
+
+// Country DR
+const countries = ['MX','CO','BR','AR','PE','EC','CL','CR','UY'];
+const drCountry  = [3.84,3.74,3.69,4.75,4.32,3.91,6.25,6.79,7.39];
+new Chart(document.getElementById('chartCountry'), {
+  type:'bar',
+  data:{
+    labels: countries,
+    datasets:[{data:drCountry, backgroundColor:countries.map(c=>c==='MX'?C_ORANGE+'CC':C_PURPLE+'66'), borderRadius:4}]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>c.raw+'%'}}},
+    scales:{y:{ticks:{callback:v=>v+'%'}, grid:{color:'#F0ECFF'}, max:9}, x:{grid:{display:false}}}
+  }
+});
+
+// Funnel line
+new Chart(document.getElementById('chartFunnelLine'), {
+  type:'line',
+  data:{
+    labels:['Clicks','→ ATC','→ PTC','→ OP','→ OPC','= OPC Final'],
+    datasets:[
+      {label:'Teikit Global', data:[100, 20.4, 16.4, 9.12, 8.0, 8.0], borderColor:C_ORANGE, backgroundColor:C_ORANGE+'22', fill:true, tension:.3, borderWidth:2.5, pointRadius:5},
+    ]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    scales:{y:{ticks:{callback:v=>v+'%'}, grid:{color:'#F0ECFF'}}, x:{grid:{display:false}}}
+  }
+});
+
+// CVR top stores
+const cvrStores = ['Teikit Las Águilas','Teikit Universidad','Teikit Del Valle','Teikit Roma Nte.','Teikit City Shop','Teikit Insurgentes','Teikit WTC','Teikit Rio Lerma','Teikit Parques Polanco','Teikit San Jeronimo'];
+const cvrVals   = [16.5, 15.3, 14.4, 13.6, 13.4, 12.9, 12.4, 12.3, 12.8, 10.9];
+new Chart(document.getElementById('chartCVRtop'), {
+  type:'bar', indexAxis:'y',
+  data:{labels:cvrStores, datasets:[{data:cvrVals, backgroundColor:C_PURPLE+'BB', borderRadius:4}]},
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    scales:{x:{ticks:{callback:v=>v+'%'}, grid:{color:'#F0ECFF'}}, y:{grid:{display:false}, ticks:{font:{size:10}}}}
+  }
+});
+
+// Clicks top
+const clickStores = ['Teikit Universidad','Teikit Toluca Colón','Teikit San Jeronimo','Teikit Prado Norte','Teikit Las Águilas','Teikit Aragón','Teikit Metepec','Teikit San Jeronimo 2','Teikit Parques Polanco','Teikit WTC'];
+const clickVals   = [1167, 836, 843, 749, 822, 710, 602, 679, 678, 547];
+new Chart(document.getElementById('chartClicksTop'), {
+  type:'bar', indexAxis:'y',
+  data:{labels:clickStores, datasets:[{data:clickVals, backgroundColor:C_ORANGE+'BB', borderRadius:4}]},
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    scales:{x:{grid:{color:'#F0ECFF'}}, y:{grid:{display:false}, ticks:{font:{size:10}}}}
+  }
+});
+
+// Products mix donut
+new Chart(document.getElementById('chartProductosMix'), {
+  type:'doughnut',
+  data:{
+    labels: products.slice(0,8).map(p=>p.name),
+    datasets:[{data:products.slice(0,8).map(p=>p.sales), backgroundColor:[C_ORANGE,C_PURPLE,C_GREEN,C_AMBER,'#0EA5E9','#EC4899','#8B5CF6','#06B6D4'], hoverOffset:6, borderWidth:2, borderColor:'#fff'}]
+  },
+  options:{responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{legend:{position:'right', labels:{boxWidth:10,font:{size:11}}}}}
+});
+
+// Momentos hora
+const horas = [13,14,15,16,17,18,19,20,21,22,23];
+const ordHora     = [66,225,361,322,299,269,534,442,345,263,95];
+const ordHoraAbr  = [34,235,377,360,333,315,319,331,395,322,93];
+new Chart(document.getElementById('chartHoras'), {
+  type:'bar',
+  data:{
+    labels:horas.map(h=>h+'h'),
+    datasets:[
+      {label:'Mayo',  data:ordHora,    backgroundColor:C_ORANGE+'CC', borderRadius:4},
+      {label:'Abril', data:ordHoraAbr, backgroundColor:C_PURPLE+'66', borderRadius:4},
+    ]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10,font:{size:11}}}},
+    scales:{y:{grid:{color:'#F0ECFF'}}, x:{grid:{display:false}}}
+  }
+});
+
+// Días
+const dias = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+const ordDia    = [280,207,317,276,891,623,627];
+const ordDiaAbr = [419,449,495,500,309,388,554];
+new Chart(document.getElementById('chartDias'), {
+  type:'bar',
+  data:{
+    labels:dias,
+    datasets:[
+      {label:'Mayo',  data:ordDia,    backgroundColor:C_ORANGE+'CC', borderRadius:4},
+      {label:'Abril', data:ordDiaAbr, backgroundColor:C_PURPLE+'66', borderRadius:4},
+    ]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10,font:{size:11}}}},
+    scales:{y:{grid:{color:'#F0ECFF'}}, x:{grid:{display:false}}}
+  }
+});
+
+// ─── BUILD DOM ELEMENTS ───────────────────────────────────────────────────────
+
+// Tabla ciudad
+const tbody = document.getElementById('tablaCiudad');
+ciudadData.forEach(d => {
+  const dvVta = parseFloat(pct(d.vtaMay, d.vtaAbr));
+  const dvOrd = parseFloat(pct(d.ordMay, d.ordAbr));
+  const dvAov = parseFloat(pct(d.aovMay, d.aovAbr));
+  const b = (v, good) => {
+    const cls = v > 0 ? (good ? 'up' : 'down') : (good ? 'down' : 'up');
+    return `<span class="badge ${v>0?'up':'down'}">${v>0?'▲':'▼'} ${Math.abs(v)}%</span>`;
+  };
+  tbody.innerHTML += `
+    <tr>
+      <td>${d.ciudad}</td>
+      <td class="num">$${(d.vtaAbr/1000).toFixed(0)}K</td>
+      <td class="num">$${(d.vtaMay/1000).toFixed(0)}K</td>
+      <td class="num">${b(dvVta)}</td>
+      <td class="num">${d.ordAbr}</td>
+      <td class="num">${d.ordMay}</td>
+      <td class="num">${b(dvOrd)}</td>
+      <td class="num">$${d.aovAbr.toFixed(0)}</td>
+      <td class="num">$${d.aovMay.toFixed(0)}</td>
+      <td class="num">${b(dvAov)}</td>
+    </tr>`;
+});
+
+// Products ranking
+const rankDiv = document.getElementById('productsRanking');
+products.forEach(p => {
+  const isPos = p.delta >= 0;
+  const barWidth = Math.round((p.units / 1537) * 100);
+  rankDiv.innerHTML += `
+    <div class="product-row">
+      <div class="rank ${p.rank<=3?'top':''}">${p.rank}</div>
+      <div class="p-name">${p.name}</div>
+      <div style="width:100px">
+        <div class="progress-bar"><div class="progress-fill" style="width:${barWidth}%;background:${p.rank<=3?'var(--rappi-orange)':'var(--rappi-purple)'}"></div></div>
+      </div>
+      <div class="p-units">${p.units.toLocaleString()}</div>
+      <span class="badge ${isPos?'up':'down'}" style="font-size:10px">${isPos?'▲':'▼'} ${Math.abs(p.delta)}%</span>
+    </div>`;
+});
+
+// ─── TAB NAVIGATION ──────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
